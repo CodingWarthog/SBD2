@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.2.1 (Build 803U_SU)" ts="2019-06-10 19:08:09">
+<Class name="Koleje.Doswiadczenie">
+<Super>%SerialObject</Super>
+<TimeChanged>65173,71390.927852</TimeChanged>
+<TimeCreated>65171,39262.726908</TimeCreated>
+
+<Property name="RokZatrudnienia">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="LiczbaPrzejazdow">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheSerialState</Type>
+<DataLocation>^Koleje.DoswiadczenieD</DataLocation>
+<DefaultData>DoswiadczenieDefaultData</DefaultData>
+<IdLocation>^Koleje.DoswiadczenieD</IdLocation>
+<IndexLocation>^Koleje.DoswiadczenieI</IndexLocation>
+<State>DoswiadczenieState</State>
+<StreamLocation>^Koleje.DoswiadczenieS</StreamLocation>
+<Data name="DoswiadczenieDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>DataZatrudnienia</Value>
+</Value>
+<Value name="3">
+<Value>LiczbaPrzejazdow</Value>
+</Value>
+<Value name="4">
+<Value>RokZatrudnienia</Value>
+</Value>
+</Data>
+<Data name="DoswiadczenieState">
+<Value name="1">
+<Value>RokZatrudnienia</Value>
+</Value>
+<Value name="2">
+<Value>LiczbaPrzejazdow</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="Koleje.Pasazer">
+<Super>%Persistent,%Populate,%XML.Adaptor,%ZEN.DataModel.Adaptor,Koleje.Osoba</Super>
+<TimeChanged>65173,84939.472403</TimeChanged>
+<TimeCreated>65171,39688.630031</TimeCreated>
+
+<Property name="Klasa">
+<Type>%Integer</Type>
+<Required>1</Required>
+<Parameter name="MAXVAL" value="3"/>
+<Parameter name="MINVAL" value="1"/>
+</Property>
+
+<Property name="Miejsce">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Podrozuje">
+<Type>Koleje.Pociag</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Przewozi</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="pokazBilet">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	WRITE !,"Klasa: " _..Klasa_ " Miejsce: " _..Miejsce_ " Numer pociągu: " _..Podrozuje.NumerPociagu
+]]></Implementation>
+</Method>
+
+<Method name="przedstawPasazera">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	WRITE ..przedstawSie()
+	DO ..pokazBilet()
+]]></Implementation>
+</Method>
+
+<Method name="przedstawSie">
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	 
+	RETURN "Nazwisko: " _..Nazwisko_ " Imie: " _..Imie_ " Pesel: " _..Pesel_ " Data urodzenia: " _..RokUrodzenia
+]]></Implementation>
+</Method>
+
+<Method name="zapiszPasazera">
+<FormalSpec>imie,nazwisko,pesel,rokUrodzenia,klasa,miejsce,podrozuje</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	SET ..Imie = imie
+ 	SET ..Nazwisko = nazwisko
+ 	SET ..Pesel = pesel
+ 	SET ..RokUrodzenia = rokUrodzenia
+ 	SET ..Klasa = klasa
+ 	SET ..Miejsce = miejsce
+ 	SET ..Podrozuje = podrozuje
+ 	
+	Return "Dane pasazera zapisane"
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Koleje.PasazerD</DataLocation>
+<DefaultData>PasazerDefaultData</DefaultData>
+<IdLocation>^Koleje.PasazerD</IdLocation>
+<IndexLocation>^Koleje.PasazerI</IndexLocation>
+<StreamLocation>^Koleje.PasazerS</StreamLocation>
+<Data name="PasazerDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Imie</Value>
+</Value>
+<Value name="3">
+<Value>Miejsce</Value>
+</Value>
+<Value name="4">
+<Value>Pesel</Value>
+</Value>
+<Value name="5">
+<Value>DataUrodzenia</Value>
+</Value>
+<Value name="6">
+<Value>Klasa</Value>
+</Value>
+<Value name="7">
+<Value>Nazwisko</Value>
+</Value>
+<Value name="8">
+<Value>Podrozuje</Value>
+</Value>
+<Value name="9">
+<Value>RokUrodzenia</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="Koleje.Pociag">
+<Super>%Persistent</Super>
+<TimeChanged>65174,61481.942936</TimeChanged>
+<TimeCreated>65171,39742.667649</TimeCreated>
+
+<Property name="NumerPociagu">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="LiczbaMiejsc">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="RokProdukcji">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="CzyJedzie">
+<Type>%Boolean</Type>
+<Required>1</Required>
+</Property>
+
+<Method name="pokazPociag">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	WRITE !,"NumerPociagu: " _..NumerPociagu_ "Liczba miejsc: " _..LiczbaMiejsc_ " Rok produkcji: "_..RokProdukcji
+]]></Implementation>
+</Method>
+
+<Method name="start">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	SET ..CzyJedzie = 1
+	RETURN "Pociag wystartował"
+]]></Implementation>
+</Method>
+
+<Method name="stop">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	SET ..CzyJedzie = 0
+	RETURN "Pociag się zatrzymał"
+]]></Implementation>
+</Method>
+
+<Property name="Przewozi">
+<Type>Koleje.Pasazer</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Podrozuje</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="MaKontrolerowBiletow">
+<Type>Koleje.KontrolerzyBiletow</Type>
+<Cardinality>many</Cardinality>
+<Inverse>KontrolujeW</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="MaKonduktora">
+<Type>Koleje.Konduktorzy</Type>
+<Cardinality>many</Cardinality>
+<Inverse>JestKonduktoremW</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Koleje.PociagD</DataLocation>
+<DefaultData>PociagDefaultData</DefaultData>
+<IdLocation>^Koleje.PociagD</IdLocation>
+<IndexLocation>^Koleje.PociagI</IndexLocation>
+<StreamLocation>^Koleje.PociagS</StreamLocation>
+<Data name="PociagDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>NumerPociagu</Value>
+</Value>
+<Value name="3">
+<Value>LiczbaMiejsc</Value>
+</Value>
+<Value name="4">
+<Value>RokProdukcji</Value>
+</Value>
+<Value name="5">
+<Value>MaKonduktora</Value>
+</Value>
+<Value name="6">
+<Value>CzyJedzie</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Project name="KolejeProjekt" LastModified="2019-06-10 19:08:01.005187">
+  <Items>
+    <ProjectItem name="Koleje.Doswiadczenie" type="CLS"></ProjectItem>
+    <ProjectItem name="Koleje.Pasazer" type="CLS"></ProjectItem>
+    <ProjectItem name="Koleje.Pociag" type="CLS"></ProjectItem>
+  </Items>
+</Project>
+</Export>
